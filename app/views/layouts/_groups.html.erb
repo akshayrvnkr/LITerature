@@ -1,0 +1,127 @@
+<div class="tab-pane fade h-100" id="tab-content-create-chat" role="tabpanel">
+  <div class="d-flex flex-column h-100">
+
+    <%= form_with(model: Group.new) do |form| %>
+      <div class="hide-scrollbar">
+        <div class="container-fluid py-6">
+
+          <div class="list-inline-item">
+            <a class="text-muted px-0" href="#" data-chat="open">
+              <i class="icon-md fe-menu"></i>
+            </a>
+          </div>
+          <!-- Title -->
+          <h2 class="font-bold mb-6 list-inline-item">Create group</h2>
+          <!-- Title -->
+
+          <!-- Tabs -->
+          <ul class="nav nav-tabs nav-justified mb-6" role="tablist">
+            <li class="nav-item">
+              <a href="#create-group-details" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true">Details</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="#create-group-members" class="nav-link" data-toggle="tab" role="tab" aria-selected="false">Members</a>
+            </li>
+          </ul>
+          <!-- Tabs -->
+
+          <!-- Create chat -->
+          <div class="tab-content" role="tablist">
+
+            <!-- Chat details -->
+            <div id="create-group-details" class="tab-pane fade show active" role="tabpanel">
+
+              <div class="form-group">
+                <label class="small" for="new-chat-title">Name</label>
+                <%= form.text_field :name, :class => "form-control form-control-lg", :placeholder => "Group Name", :required => true %>
+              </div>
+            </div>
+            <!-- Chat details -->
+
+            <!-- Chat Members -->
+            <div id="create-group-members" class="tab-pane fade" role="tabpanel">
+              <nav class="list-group list-group-flush mb-n6">
+
+                <% ('A'..'Z').each do |alpha| %>
+                  <% alpha_users = @users.select { |x| x.first_name[0].upcase == alpha } %>
+                  <% if alpha_users.size > 0 %>
+                    <div class="mb-6">
+                      <small class="text-uppercase"><%= alpha %></small>
+                    </div>
+                    <% alpha_users.each do |user| %>
+                      <!-- Friend -->
+                      <div class="card mb-6">
+                        <div class="card-body">
+
+                          <div class="media">
+
+                            <div class="avatar avatar-online mr-5">
+                              <img class="avatar-img" src="<%= user.profile_image %>" alt="<%= user.name %>">
+                            </div>
+
+
+                            <div class="media-body align-self-center mr-6">
+                              <h6 class="mb-0"><%= user.name %></h6>
+                              <small class="text-muted">Online</small>
+                            </div>
+
+                            <div class="align-self-center ml-auto">
+                              <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="id-user-<%= user.id %>" name="<%= "group[members][#{user.id}]" %>" type="checkbox">
+                                <label class="custom-control-label" for="id-user-<%= user.id %>"></label>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                    <% end %>
+                    <!-- Friend -->
+                  <% end %>
+                <% end %>
+
+              </nav>
+            </div>
+            <!-- Chat Members -->
+
+          </div>
+          <!-- Create chat -->
+
+        </div>
+      </div>
+
+      <!-- Button -->
+      <div class="pb-6">
+        <div class="container-fluid">
+          <%= form.submit "Create Group", :class => "btn btn-lg btn-primary btn-block" %>
+        </div>
+      </div>
+    <% end %>
+
+
+    <div class="hide-scrollbar">
+      <div class="container-fluid py-6">
+        <!-- Title -->
+        <h2 class="font-bold mb-6 list-inline-item">Your groups</h2>
+        <!-- Title -->
+        <!-- Chat details -->
+        <div id="create-group-details" class="tab-pane fade show active" role="tabpanel">
+
+          <table class="table table-striped">
+            <% current_user.groups.each do |group| %>
+              <tr>
+                <td><%= link_to group.name, group %></td>
+              </tr>
+            <% end %>
+          </table>
+        </div>
+        <!-- Chat details -->
+        <!-- Create chat -->
+
+      </div>
+    </div>
+
+  </div>
+</div>

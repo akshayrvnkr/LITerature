@@ -1,0 +1,42 @@
+<%= form_with(model: game_user_movement, local: true) do |form| %>
+  <% if game_user_movement.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(game_user_movement.errors.count, "error") %> prohibited this game_user_movement from being saved:</h2>
+
+      <ul>
+      <% game_user_movement.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :game_id %>
+    <%= form.text_field :game_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :requester_id %>
+    <%= form.number_field :requester_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :requestee_id %>
+    <%= form.number_field :requestee_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :card_no %>
+    <%= form.text_field :card_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fail %>
+    <%= form.check_box :fail %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

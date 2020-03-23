@@ -1,0 +1,135 @@
+<!-- Navigation -->
+<div class="navigation navbar navbar-light justify-content-center py-xl-7">
+
+  <!-- Brand -->
+  <a href="/" class="d-none d-xl-block mb-6">
+    <img src="/fire.svg" style="height: 46px;">
+  </a>
+
+  <!-- Menu -->
+  <ul class="nav navbar-nav flex-row flex-xl-column flex-grow-1 justify-content-between justify-content-xl-center py-3 py-lg-0" role="tablist">
+
+    <!-- Invisible item to center nav vertically -->
+    <li class="nav-item d-none d-xl-block invisible flex-xl-grow-1">
+      <a class="nav-link position-relative p-0 py-xl-3" href="#" title="">
+        <i class="icon-lg fe-x"></i>
+      </a>
+    </li>
+
+    <!-- Create group -->
+    <li class="nav-item">
+      <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-create-chat" title="Create chat" role="tab">
+        <i class="icon-lg fe-edit"></i>
+      </a>
+    </li>
+
+    <!-- Friend -->
+    <li class="nav-item mt-xl-9">
+      <a class="nav-link position-relative p-0 py-xl-3 active" data-toggle="tab" href="#tab-content-friends" title="Users" role="tab">
+        <i class="icon-lg fe-users"></i>
+      </a>
+    </li>
+    <!-- Profile -->
+    <li class="nav-item mt-xl-9 d-xl-block flex-xl-grow-1">
+      <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-user" title="User" role="tab">
+        <i class="icon-lg fe-user"></i>
+      </a>
+    </li>
+
+
+  </ul>
+  <!-- Menu -->
+
+</div>
+<!-- Navigation -->
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="tab-content h-100" role="tablist">
+    <%= render :partial => "layouts/groups" %>
+    <%= render :partial => "layouts/users" %>
+    <%= render :partial => "layouts/profile" %>
+
+  </div>
+</div>
+<!-- Sidebar -->
+
+<!-- Main Content -->
+<div class="main main-visible" data-mobile-height="">
+
+  <!-- Chat -->
+  <div id="chat-1" class="chat dropzone-form-js" data-dz-url="some.php">
+
+    <!-- Chat: body -->
+    <div class="chat-body">
+
+      <!-- Chat: Header -->
+      <div class="chat-header border-bottom py-4 py-lg-6 px-lg-8">
+        <div class="container-xxl">
+
+          <div class="row align-items-center">
+
+            <!-- Close chat(mobile) -->
+            <div class="col-2 d-xl-none">
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item">
+                  <a class="text-muted px-0" href="#" data-chat="open">
+                    <i class="icon-md fe-menu"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Chat photo -->
+            <div class="col-8 col-xl-8">
+              <div class="media text-center text-xl-left">
+
+                <div class="media-body align-self-center">
+                  <a href="/" class="d-inline-block  d-xl-none">
+                    <img src="/fire.svg" style="height: 24px;">
+                  </a>
+                  <h6 class="mb-n1 d-inline-block">LITerature :: <%= yield :title %></h6>
+                  <small class="text-muted"><%= yield :subtitle %></small>
+                </div>
+              </div>
+            </div>
+
+
+          </div><!-- .row -->
+
+        </div>
+      </div>
+      <!-- Chat: Header -->
+
+
+      <!-- Chat: Content-->
+      <div class=" px-lg-8">
+        <% if alert %>
+          <div class="alert alert-danger">
+            <%= alert %>
+          </div>
+        <% end %>
+        <% if notice %>
+          <div class="alert alert-success">
+            <%= notice %>
+          </div>
+        <% end %>
+      </div>
+      <div class="chat-content px-lg-8">
+        <div class="container-xxl py-6">
+          <%= yield %>
+        </div>
+
+        <!-- Scroll to end -->
+        <!--        <div class="end-of-chat"></div>-->
+      </div>
+      <!-- Chat: Content -->
+
+    </div>
+    <!-- Chat: body -->
+
+
+  </div>
+  <!-- Chat -->
+
+</div>
+<!-- Main Content -->

@@ -1,0 +1,63 @@
+
+<div class="tab-pane fade h-100 show active" id="tab-content-friends" role="tabpanel">
+  <div class="d-flex flex-column h-100">
+
+    <div class="hide-scrollbar">
+      <div class="container-fluid py-6">
+
+        <div class="list-inline-item">
+          <a class="text-muted px-0" href="#" data-chat="open">
+            <i class="icon-md fe-menu"></i>
+          </a>
+        </div>
+        <!-- Title -->
+        <h2 class="font-bold mb-6 list-inline-item">Users</h2>
+        <!-- Title -->
+
+        <!-- Friends -->
+        <nav class="mb-n6">
+
+          <% ('A'..'Z').each do |alpha| %>
+            <% alpha_users = @users.select { |x| x.first_name[0].upcase == alpha } %>
+            <% if alpha_users.size > 0 %>
+              <div class="mb-6">
+                <small class="text-uppercase"><%= alpha %></small>
+              </div>
+              <% alpha_users.each do |user| %>
+
+                <!-- Friend -->
+                <div class="card mb-6">
+                  <div class="card-body">
+
+                    <div class="media">
+
+                      <div class="avatar avatar-online mr-5">
+                        <img class="avatar-img" src="<%= user.profile_image %>" alt="<%= user.name %>">
+                      </div>
+
+
+                      <div class="media-body align-self-center">
+                        <h6 class="mb-0"><%= user.name %></h6>
+                        <small class="text-muted">Online</small>
+                      </div>
+                    </div>
+
+                    <!-- Link -->
+                    <a href="#" class="stretched-link"></a>
+
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+            <!-- Friend -->
+
+          <% end %>
+        </nav>
+        <!-- Friends -->
+
+      </div>
+    </div>
+
+  </div>
+</div>
+

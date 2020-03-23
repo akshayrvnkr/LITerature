@@ -1,0 +1,21 @@
+<% game_users = @game.game_users %>
+<% my_team = game_users.select { |x| x.user_id == current_user.id }.first.team %>
+<% my_turn = (@game.current_player == current_user.id) %>
+<% col_count = (game_users.count == 8) ? 3 : 4 %>
+<% {"A" => "red", "B" => "blue"}.each do |team, color| %>
+  <div class="card mb-1" style="border-color: <%=color %>; padding: 5px;">
+    <div class="row">
+      <% game_users.select { |x| x.team == team }.each do |game_user| %>
+        <% user = game_user.user %>
+        <% cards = game_user.cards[:current] %>
+        <% askable = (cards.size != 0 and user.id != current_user.id and my_team != team and my_turn) %>
+        <div class="col-<%= col_count %> col-md-2 col-lg-2 col-sm-<%= col_count %> text-center text-truncate" style="<%= "cursor: pointer" if askable %>" onclick="<%= "open_modal(#{user.id},'#{user.first_name}');" if askable %>">
+          <div class="<%= "highlight" if user.id == @game.current_player %>">
+            <img src="<%= user.profile_image %>" style="height: 48px;<%= "-webkit-filter: grayscale(100%);filter: grayscale(100%);" if cards.size == 0 %>" alt="<%= user.first_name %>"/>
+            <br/><span style="font-size: 10px;"><%= user.first_name %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,63 @@
+<div class="main main-visible" data-mobile-height="">
+
+  <!-- Chat -->
+  <div id="chat-1" class="chat dropzone-form-js">
+
+    <!-- Chat: body -->
+    <div class="chat-body">
+
+      <!-- Chat: Header -->
+      <div class="chat-header border-bottom py-4 py-lg-6 px-lg-8">
+        <div class="container-xxl">
+
+          <div class="row align-items-center">
+            <!-- Chat photo -->
+            <div class="col-6 col-xl-6">
+              <div class="media text-center text-xl-left">
+                <div class="avatar avatar-sm d-xl-inline-block mr-5">
+                  <img src="/fire.svg" class="avatar-img" alt="">
+                </div>
+                <div class="media-body align-self-center text-truncate">
+                  <h2 class="text-truncate mb-n1">LITerature</h2>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat toolbar -->
+
+          </div><!-- .row -->
+
+        </div>
+      </div>
+      <!-- Chat: Header -->
+
+      <div class=" px-lg-8">
+        <% if alert %>
+          <div class="alert alert-danger">
+            <%= alert %>
+          </div>
+        <% end %>
+        <% if notice %>
+          <div class="alert alert-success">
+            <%= notice %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Chat: Content-->
+      <div class="chat-content px-lg-8">
+        <div class="container-xxl py-6 py-lg-10">
+          <%= yield %>
+        </div>
+
+        <!-- Scroll to end -->
+        <!--        <div class="end-of-chat"></div>-->
+      </div>
+      <!-- Chat: Content -->
+
+    </div>
+    <!-- Chat: body -->
+  </div>
+  <!-- Chat -->
+
+</div>

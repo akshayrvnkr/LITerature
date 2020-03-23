@@ -1,0 +1,77 @@
+<h1><%= @group.name %></h1>
+<p>Created by: <%= User.find_by_id(@group.creator_id)&.name %></p>
+<% users = @group.users %> | <%= users.size %> Members</p>
+<div class="tab-pane h-100" id="tab-content-show-group" role="tabpanel">
+  <div class="d-flex flex-column h-100">
+
+    <div class="container-fluid py-6">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs nav-justified mb-6" role="tablist">
+        <li class="nav-item">
+          <a href="#show-group-details" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true">Games</a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#show-group-members" class="nav-link" data-toggle="tab" role="tab" aria-selected="false">Members</a>
+        </li>
+      </ul>
+      <!-- Tabs -->
+
+      <!-- Create chat -->
+      <div class="tab-content" role="tablist">
+
+        <!-- Chat details -->
+        <div id="show-group-details" class="tab-pane fade show active" role="tabpanel">
+          <table class="table table-striped">
+            <% @group.games.each do |game| %>
+              <tr>
+                <td><%= link_to game.name, game %></td>
+              </tr>
+            <% end %>
+          </table>
+          <%= link_to "New Game", new_game_group_path(@group), :class=>"btn btn-lg btn-primary btn-block" %>
+        </div>
+        <!-- Chat details -->
+
+        <!-- Chat Members -->
+        <div id="show-group-members" class="tab-pane fade" role="tabpanel">
+
+          <% ('A'..'Z').each do |alpha| %>
+            <% alpha_users = users.select { |x| x.first_name[0].upcase == alpha } %>
+            <% if alpha_users.size > 0 %>
+              <div class="mb-6">
+                <small class="text-uppercase"><%= alpha %></small>
+              </div>
+              <% alpha_users.each do |user| %>
+                <!-- Friend -->
+                <div class="card mb-6">
+                  <div class="card-body">
+
+                    <% offline = "Online" %>
+
+                    <div class="media">
+                      <div class="avatar avatar-<%= offline.downcase %> mr-5">
+                        <img class="avatar-img" src="<%= user.profile_image %>" alt="<%= user.name %>">
+                      </div>
+
+                      <div class="media-body align-self-center mr-6">
+                        <h6 class="mb-0"><%= user.name %></h6>
+                        <small class="text-muted"><%= offline %></small>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              <% end %>
+              <!-- Friend -->
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Back', groups_path %>

@@ -1,0 +1,29 @@
+
+
+<p>
+  <strong>Game:</strong>
+  <%= @game_user_movement.game %>
+</p>
+
+<p>
+  <strong>Requester:</strong>
+  <%= @game_user_movement.requester_id %>
+</p>
+
+<p>
+  <strong>Requestee:</strong>
+  <%= @game_user_movement.requestee_id %>
+</p>
+
+<p>
+  <strong>Card no:</strong>
+  <%= @game_user_movement.card_no %>
+</p>
+
+<p>
+  <strong>Fail:</strong>
+  <%= @game_user_movement.fail %>
+</p>
+
+<%= link_to 'Edit', edit_game_user_movement_path(@game_user_movement) %> |
+<%= link_to 'Back', game_user_movements_path %>

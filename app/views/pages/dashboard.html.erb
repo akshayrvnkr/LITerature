@@ -1,0 +1,76 @@
+<%= content_for :title do %>Welcome
+<% end %>
+<h1>Welcome</h1>
+
+<div class="tab-pane h-100" id="tab-content-show-group" role="tabpanel">
+  <div class="d-flex flex-column h-100">
+
+    <div class="container-fluid py-6">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs nav-justified mb-6" role="tablist">
+        <li class="nav-item">
+          <a href="#show-group-details" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true">Instructions</a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#show-group-members" class="nav-link" data-toggle="tab" role="tab" aria-selected="false">My
+            Groups</a>
+        </li>
+      </ul>
+      <!-- Tabs -->
+
+      <!-- Create chat -->
+      <div class="tab-content" role="tablist">
+
+        <!-- Chat details -->
+        <div id="show-group-details" class="tab-pane fade show active" role="tabpanel">
+          <ul>
+            <li>Literature is a card game played with 6 or 8 players split equally in two teams.</li>
+            <li>Four cards with the face value of 8 is removed from the deck of 52 standard playing cards</li>
+            <li>The remaining 48 cards are dealt out randomly equally to each of the players</li>
+            <li>The 48 cards are conceptually divided into 8 half-suits</li>
+            <li>Play proceeds with a player requesting a card from a player on the other team. Players may only request
+              cards in
+              half-suits that they already partly have, and players may not request cards that they already have.
+            </li>
+            <li>If the second player has the card requested, they transfer the card to the first player, who gets
+              another turn. If
+              the second player does not have the card requested, the turn goes to the second player.
+            </li>
+            <li>
+              When a player has collected all the cards in a half-suit by themselves, they can lay it down face-up and
+              win it for
+              their team. If a half-suit is scattered among the player's own team members, a player can declare a set on
+              their
+              turn by announcing <b>correctly</b> who has what card in the half-suit
+            </li>
+            <li>If the player was not entirely correct in saying who had what card, but the entire half-suit was owned
+              by their
+              own team, then the half-suit is forfeit and neither side can win it. If the player was incorrect and one
+              or more of
+              the cards were owned by the other team, then the half-suit is awarded to the other team.
+            </li>
+            <li>Play continues until all half-suits have been accounted for. The team with more half-suits wins.</li>
+          </ul>
+        </div>
+        <!-- Chat details -->
+
+        <!-- Chat Members -->
+        <div id="show-group-members" class="tab-pane fade" role="tabpanel">
+          <% my_groups = current_user.groups %>
+          <% if my_groups.size > 0 %>
+            <table class="table table-striped">
+              <% my_groups.each do |group| %>
+                <tr>
+                  <td><%= link_to group.name, group %></td>
+                </tr>
+              <% end %>
+            </table>
+          <% else %>
+            <p>Sorry you aren't part of any groups</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

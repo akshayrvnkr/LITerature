@@ -1,0 +1,7 @@
+<div class="row">
+  <% @game.user_cards(current_user.id).each do |my_card| %>
+    <div class="col-md-2 col-lg-2 col-xl-1 col-sm-3 col-3">
+      <%= generate_card(my_card) %>
+    </div>
+  <% end %>
+</div>

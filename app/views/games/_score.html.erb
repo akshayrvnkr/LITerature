@@ -1,0 +1,3 @@
+<% {"A" => "red", "B" => "blue"}.each do |team, color| %>
+  &nbsp;&nbsp;&nbsp;&nbsp;<div class="d-inline-block" style="width:16px;height:16px;background-color: <%= color %>"></div> : <%= @game.score & [team] or 0 %>
+<% end %>

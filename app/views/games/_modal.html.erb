@@ -1,0 +1,90 @@
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Request <span id="modal-user">User</span></h4>
+        <button type="button" class="close" onclick="destroy_modal();">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <% @game.user_cards(current_user.id).each do |my_card| %>
+            <div class="col-md-2 col-lg-2 col-xl-2 col-sm-3 col-3 select_base_card" id="select_base_card_<%= my_card %>" onclick="select_base_card('<%= my_card %>');">
+              <a href="#" style="display: table;">
+                <%= generate_card(my_card) %>
+              </a>
+            </div>
+          <% end %>
+        </div>
+        <hr/>
+        <h4 class="card-title">Select Card</h4>
+        <div id="select-card">
+          <div class="row" id="card_deck">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" disabled="disabled" id="card_req_btn" onclick="request_card();">Request</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+
+    function select_base_card(card_name) {
+        $(".select_base_card").children("a").removeClass("highlight");
+        $("#select_base_card_" + card_name).children("a").addClass("highlight");
+        $("#card_req_btn").attr("disabled","disabled");
+        if (card_name != "") {
+            generate_card_deck((card_name));
+        }
+    }
+
+    function request_card(){
+
+        $("#card_req_btn").attr("disabled","disabled");
+        $.post("<%= request_card_game_path(@game,:format=>:json) %>",{
+            requestee_id: requestee_player,
+            card_no: requestee_card
+        });
+    }
+
+    function select_req_card(card_name) {
+        $(".select_req_card").children("a").removeClass("highlight");
+        $("#select_req_card_" + card_name).children("a").addClass("highlight");
+        $("#card_req_btn").removeAttr("disabled");
+        requestee_card = card_name;
+    }
+
+    function generate_card_deck(card_name) {
+        var set = card_name.slice(0, 1);
+        var card = parseInt(card_name.slice(1, 3));
+        var deck = [];
+        requestee_card = "";
+        if (card < 8) {
+            for (let i = 2; i < 8; i++) {
+                if (!my_cards.includes(set + i)) {
+                    deck.push(set + i);
+                }
+            }
+        } else {
+            for (let i = 9; i < 15; i++) {
+                if (!my_cards.includes(set + i)) {
+                    deck.push(set + i);
+                }
+            }
+        }
+        $("#card_deck").html("");
+
+        deck.forEach(function (card) {
+            var card_sx = -card_xoff[card.slice(1, 3)] * 50 - 5;
+            var card_sy = -card_yoff[card.slice(0, 1)] * 70 - 5;
+            $("#card_deck").append("<div class=\"col-md-2 col-lg-2 col-xl-2 col-sm-3 col-3 select_req_card\" id=\"select_req_card_" + card + "\" onclick=\"select_req_card('" + card + "');\">\n" +
+                "              <a href=\"#\" style=\"display: table;\">\n" +
+                "<img src=\"/small_playing_cards.svg\" style=\"width:50px;height:70px;object-fit: none; object-position: " + card_sx + "px " + card_sy + "px; \"alt=\"" + card + "\"/></a>\n</div>")
+        })
+
+    }
+</script>

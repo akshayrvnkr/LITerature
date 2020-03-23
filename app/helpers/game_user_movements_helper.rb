@@ -1,0 +1,2 @@
+module GameUserMovementsHelper
+end

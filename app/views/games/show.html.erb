@@ -1,0 +1,123 @@
+<%= content_for :title do %><%= @game.group.name %> : <%= @game.name.split("-")[0] %>
+<% end %>
+<style>
+  .highlight {
+    border: 4px solid lightgreen;
+  }
+</style>
+<div>
+  <div id="history_panel">
+    <div class="card">
+      <div class="media">
+        <div class="media-body align-self-center">
+          <h4 class="mb-0">Score
+            <div id="score_body" class="d-inline-block">
+              <%= render :partial => "score" %>
+            </div>
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="history_panel">
+
+    <div class="card">
+      <div class="media">
+        <div class="media-body align-self-center">
+          <h4 class="mb-0">Last move #<span id="last_move_no">0</span></h4>
+        </div>
+      </div>
+      <div id="last_move_message" style="color: black;">
+        Last move unknown
+      </div>
+    </div>
+  </div>
+  <div class="selection_panel">
+    <div class="user_list">
+      <div class="card-body">
+        <div class="media">
+          <div class="media-body align-self-center">
+            <h4 class="mb-0">Players</h4>
+          </div>
+        </div>
+        <div id="players_body">
+          <%= render :partial => "players" %>
+        </div>
+        <%= link_to "Declare", "#", :class => "btn btn-sm btn-light btn-block" %>
+      </div>
+
+    </div>
+  </div>
+  <div id="my_cards">
+    <div class="card-body">
+
+      <div class="media">
+
+        <div class="media-body align-self-center">
+          <h4 class="mb-0">My Cards</h4>
+        </div>
+      </div>
+      <div id="my_cards_body">
+        <%= render :partial => "my_cards" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modal_body">
+  <%= render :partial => "modal" %>
+</div>
+<script>
+
+    var my_turn = <%= current_user.id == @game.current_player %>;
+    var requestee_player = 0;
+    var requestee_card = "";
+
+    function open_modal(user_id, name) {
+        if(my_turn) {
+            requestee_player = user_id;
+            select_base_card("");
+            select_req_card("");
+            $("#card_req_btn").attr("disabled","disabled");
+            $('#myModal').appendTo("body").modal('show');
+            $('#modal-user').html(name);
+        }
+    }
+
+    var card_xoff = {
+        2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 9: 8,
+        10: 9, 11: 10, 12: 11, 13: 12, 14: 0,
+    };
+
+    var card_yoff = {"D": 0, "H": 1, "S": 2, "C": 3};
+
+    var my_cards = [<%= @my_game.cards[:current].map{|x| "\"#{x}\""}.join(",").html_safe %>];
+
+    doPoll();
+    var current_move = 0;
+
+    function destroy_modal()
+    {
+        $('#myModal').modal('hide');
+        $('#myModal').remove();
+        $('.modal-backdrop').remove();
+    }
+    function doPoll() {
+        $.get("<%= status_game_path(@game,:format=>:json) %>", function (data) {
+            if (data["move"] > current_move) {
+                current_move = data["move"];
+                $("#last_move_no").html(current_move);
+                $.get("<%= refresh_game_path(@game,:format=>:json) %>", function (data) {
+                    destroy_modal();
+                    $("#my_cards_body").html(data["my_cards_html"]);
+                    $("#players_body").html(data["players_html"]);
+                    $("#score_body").html(data["score_html"]);
+                    $("#modal_body").html(data["modal_html"]);
+                    $("#last_move_message").html(data["last_move"]);
+                    my_turn = data["my_turn"];
+                })
+            }
+            setTimeout(doPoll, 3000);
+        });
+    }
+
+</script>

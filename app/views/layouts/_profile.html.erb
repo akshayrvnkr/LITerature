@@ -1,0 +1,77 @@
+
+<% if current_user %>
+  <div class="tab-pane fade h-100" id="tab-content-user" role="tabpanel">
+    <div class="d-flex flex-column h-100">
+
+      <div class="hide-scrollbar">
+        <div class="container-fluid py-6">
+
+          <div class="list-inline-item">
+            <a class="text-muted px-0" href="#" data-chat="open">
+              <i class="icon-md fe-menu"></i>
+            </a>
+          </div>
+          <!-- Title -->
+          <h2 class="font-bold mb-6 list-inline-item">Profile</h2>
+
+
+          <!-- Card -->
+          <div class="card mb-6">
+            <div class="card-body">
+              <div class="text-center py-6">
+                <!-- Photo -->
+                <div class="avatar avatar-xl mb-5">
+                  <img class="avatar-img" src="<%= current_user.profile_image %>" alt="">
+                </div>
+
+                <h5><%= current_user.name %></h5>
+              </div>
+            </div>
+          </div>
+          <!-- Card -->
+
+          <!-- Card -->
+          <div class="card mb-6">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+
+                <li class="list-group-item px-0 py-6">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <p class="small text-muted mb-0">Email</p>
+                      <p><%= current_user.email %></p>
+                    </div>
+                    <i class="text-muted icon-sm fe-mail"></i>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card -->
+
+          <div class="form-row">
+            <div class="col">
+              <!-- Button -->
+              <%= link_to edit_user_registration_path, :class=>"btn btn-lg btn-block btn-basic d-flex align-items-center" do %>
+                Edit Password
+                <span class="fe-settings ml-auto"></span>
+              <% end %>
+            </div>
+
+            <div class="col">
+              <!-- Button -->
+              <%= link_to destroy_user_session_path, :class => "btn btn-lg btn-block btn-basic d-flex align-items-center" do %>
+                Logout
+                <span class="fe-log-out ml-auto"></span>
+              <% end %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+<% end %>

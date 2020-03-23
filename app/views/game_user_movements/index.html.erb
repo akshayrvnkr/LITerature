@@ -1,0 +1,35 @@
+
+
+<h1>Game User Movements</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Game</th>
+      <th>Requester</th>
+      <th>Requestee</th>
+      <th>Card no</th>
+      <th>Fail</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @game_user_movements.each do |game_user_movement| %>
+      <tr>
+        <td><%= game_user_movement.game %></td>
+        <td><%= game_user_movement.requester_id %></td>
+        <td><%= game_user_movement.requestee_id %></td>
+        <td><%= game_user_movement.card_no %></td>
+        <td><%= game_user_movement.fail %></td>
+        <td><%= link_to 'Show', game_user_movement %></td>
+        <td><%= link_to 'Edit', edit_game_user_movement_path(game_user_movement) %></td>
+        <td><%= link_to 'Destroy', game_user_movement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Game User Movement', new_game_user_movement_path %>
