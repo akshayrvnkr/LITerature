@@ -9,7 +9,7 @@
 
 /.idea
 
-/config/environments/development.rb
+/config/environments/*
 
 # Ignore all logfiles and tempfiles.
 /log/*
