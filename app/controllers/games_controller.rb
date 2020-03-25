@@ -14,7 +14,7 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-
+     set_online_status
   end
 
   # GET /games/new
@@ -51,6 +51,7 @@ class GamesController < ApplicationController
   end
 
   def status
+	  set_online_status
     respond_to do |format|
       format.json
       format.js
