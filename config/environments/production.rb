@@ -75,6 +75,8 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+  
+  config.action_mailer.default_url_options = {host: 'https://literature.herokuapp.com', port: 443}
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
@@ -91,4 +93,16 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      :address => ENV['EMAIL_HOST'],
+      :port => 587,
+      :authentication => 'plain',
+      :user_name => ENV['EMAIL_USERNAME'],
+      :password => ENV['EMAIL_PASSWORD'],
+      :enable_starttls_auto => true
+  }
+
 end
