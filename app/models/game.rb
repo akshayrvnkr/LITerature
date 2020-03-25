@@ -1,6 +1,9 @@
 class Game < ApplicationRecord
   belongs_to :group
 
+  serialize :votes, Hash
+  serialize :score, Hash
+
   has_many :game_users, :dependent => :destroy
   has_many :users, :through => :game_users
 
@@ -16,13 +19,40 @@ class Game < ApplicationRecord
     __cards
   end
 
+  def inactive
+    self.status != 1
+  end
+
+  def self.get_base(card)
+    "#{card[0]}#{(card[1..-1].to_i > 7) ? "H" : "L"}"
+  end
+
   def self.card_name(card)
-    set_map = {"D" => "Diamond",
-               "H" => "Heart",
-               "S" => "Spade",
-               "C" => "Club"
+    "#{card_map[card[1..-1].to_i]} of #{set_map[card[0]]}"
+  end
+
+  def self.deck_map
+    {
+        "L" => "Lower",
+        "H" => "Higher"
     }
-    card_map = {
+  end
+
+  def self.deck_name(base)
+    "#{deck_map[base[1]]} deck of #{set_map[base[0]]}"
+  end
+
+  def self.set_map
+    {
+        "D" => "Diamond",
+        "H" => "Heart",
+        "S" => "Spade",
+        "C" => "Club"
+    }
+  end
+
+  def self.card_map
+    {
         2 => "Two",
         3 => "Three",
         4 => "Four",
@@ -36,7 +66,6 @@ class Game < ApplicationRecord
         13 => "King",
         14 => "Ace"
     }
-    "#{card_map[card[1..-1].to_i]} of #{set_map[card[0]]}"
   end
 
   def self.svg_shiftx

@@ -10,10 +10,10 @@
         <% cards = game_user.cards[:current] %>
         <% askable = (cards.size != 0 and user.id != current_user.id and my_team != team and my_turn) %>
         <div class="col-<%= col_count %> col-md-2 col-lg-2 col-sm-<%= col_count %> text-center text-truncate" style="<%= "cursor: pointer" if askable %>" onclick="<%= "open_modal(#{user.id},'#{user.first_name}');" if askable %>">
-          <div class="<%= "highlight" if user.id == @game.current_player %>">
+          <div id="user_game_profile_<%= user.id %>" class="avatar2 avatar-<%= (@online_status[user.id])?"online":"offline" %> <%= "highlight" if user.id == @game.current_player %>">
             <img src="<%= user.profile_image %>" style="height: 48px;<%= "-webkit-filter: grayscale(100%);filter: grayscale(100%);" if cards.size == 0 %>" alt="<%= user.first_name %>"/>
-            <br/><span style="font-size: 10px;"><%= user.first_name %></span>
           </div>
+          <div style="font-size: 10px;"><%= user.first_name %></div>
         </div>
       <% end %>
     </div>

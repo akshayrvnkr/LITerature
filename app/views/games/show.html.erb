@@ -43,7 +43,9 @@
         <div id="players_body">
           <%= render :partial => "players" %>
         </div>
-        <%= link_to "Declare", "#", :class => "btn btn-sm btn-light btn-block" %>
+        <% if @game.status != 3 %>
+          <%= link_to "Declare", "#", :class => "btn btn-sm btn-danger btn-block #{"btn-light" if current_user.id != @game.current_player}", :onclick => "open_declare_modal();", :id => "declare_btn_init" %>
+        <% end %>
       </div>
 
     </div>
@@ -57,14 +59,21 @@
           <h4 class="mb-0">My Cards</h4>
         </div>
       </div>
-      <div id="my_cards_body">
-        <%= render :partial => "my_cards" %>
-      </div>
+      <% if @game.status != 3 %>
+        <div id="my_cards_body">
+          <%= render :partial => "my_cards" %>
+        </div>
+      <% else %>
+        <div class='alert alert-success'>GAME OVER</div>
+      <% end %>
     </div>
   </div>
 </div>
 <div id="modal_body">
   <%= render :partial => "modal" %>
+</div>
+<div id="modal_declare_body">
+  <%= render :partial => "declare" %>
 </div>
 <script>
 
@@ -73,14 +82,24 @@
     var requestee_card = "";
 
     function open_modal(user_id, name) {
-        if(my_turn) {
+        if (my_turn) {
             requestee_player = user_id;
             select_base_card("");
             select_req_card("");
-            $("#card_req_btn").attr("disabled","disabled");
+            $("#card_req_btn").attr("disabled", "disabled");
             $('#myModal').appendTo("body").modal('show');
             $('#modal-user').html(name);
         }
+    }
+
+    function open_declare_modal() {
+        if (my_turn) {
+            $('#mydeclareModal').appendTo("body").modal('show');
+        }
+    }
+
+    function open_vote_modal() {
+        $('#myvoteModal').appendTo("body").modal('show');
     }
 
     var card_xoff = {
@@ -95,12 +114,24 @@
     doPoll();
     var current_move = 0;
 
-    function destroy_modal()
-    {
+    function destroy_modal() {
         $('#myModal').modal('hide');
         $('#myModal').remove();
         $('.modal-backdrop').remove();
     }
+
+    function destroy_declare_modal() {
+        $('#mydeclareModal').modal('hide');
+        $('#mydeclareModal').remove();
+        $('.modal-backdrop').remove();
+    }
+
+    function destroy_vote_modal() {
+        $('#myvoteModal').modal('hide');
+        $('#myvoteModal').remove();
+        $('.modal-backdrop').remove();
+    }
+
     function doPoll() {
         $.get("<%= status_game_path(@game,:format=>:json) %>", function (data) {
             if (data["move"] > current_move) {
@@ -108,16 +139,35 @@
                 $("#last_move_no").html(current_move);
                 $.get("<%= refresh_game_path(@game,:format=>:json) %>", function (data) {
                     destroy_modal();
+                    destroy_declare_modal();
                     $("#my_cards_body").html(data["my_cards_html"]);
                     $("#players_body").html(data["players_html"]);
                     $("#score_body").html(data["score_html"]);
                     $("#modal_body").html(data["modal_html"]);
+                    $("#modal_declare_body").html(data["declare_html"]);
                     $("#last_move_message").html(data["last_move"]);
+                    my_cards = data["my_cards"];
                     my_turn = data["my_turn"];
+                    $("#declare_btn_init").addClass("btn-light");
+                    if (my_turn) {
+                        $("#declare_btn_init").removeClass("btn-light");
+                    }
                 })
             }
-            setTimeout(doPoll, 3000);
+            for (let x = 0; x < 6; x++) {
+                var datao = data["online_status"][x];
+                var user_id = datao["user_id"];
+                var add_class = (datao["online"]) ? "online" : "offline";
+                var remove_class = (datao["online"]) ? "offline" : "online";
+                $("#user_game_profile_" + user_id).addClass("avatar-" + add_class);
+                $("#user_game_profile_" + user_id).removeClass("avatar-" + remove_class);
+            }
+            if (data["status"] == 3) {
+                $("#my_cards_body").html("<div class='alert alert-success'>GAME OVER</div>");
+                $("#declare_btn_init").remove();
+            }
         });
+        setTimeout(doPoll, 3000);
     }
 
 </script>

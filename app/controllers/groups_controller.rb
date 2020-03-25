@@ -43,14 +43,19 @@ class GroupsController < ApplicationController
   def new_game
     users = @group.users
     user_ids = users.ids
-    @game = Game.create(:name => SecureRandom.uuid, :group_id => @group.id, :current_player => user_ids.sample)
+    @game = Game.create(:name => SecureRandom.uuid,
+                        :group_id => @group.id,
+                        :current_player => user_ids.sample,
+                        :status => 1,
+                        :creator_id => current_user.id
+    )
     cards = Game.cards
     no_of_cards_per_user = (cards.size / user_ids.size).to_i
     split_cards = cards.shuffle.each_slice(no_of_cards_per_user).to_a
     teams = ["A", "B"] * (user_ids.size / 2).to_i
     user_ids.shuffle.each_with_index do |uid, index|
       GameUser.find_or_create_by(:user_id => uid, :game_id => @game.id) do |game_user|
-        game_user.cards = {:original => split_cards[index].dup, :current => split_cards[index].dup}
+        game_user.cards = {:current => split_cards[index].dup, :original => split_cards[index].dup}
         game_user.team = teams.pop
       end
     end

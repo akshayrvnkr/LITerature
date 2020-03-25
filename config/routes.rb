@@ -6,6 +6,8 @@ Rails.application.routes.draw do
       get :refresh
       get :status
       post :request_card
+      post :declare
+      post :next_player
     end
   end
   resources :groups do

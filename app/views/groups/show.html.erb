@@ -23,13 +23,26 @@
         <!-- Chat details -->
         <div id="show-group-details" class="tab-pane fade show active" role="tabpanel">
           <table class="table table-striped">
-            <% @group.games.each do |game| %>
+            <thead>
+            <tr>
+              <th>Code</th>
+              <th>Created at</th>
+              <th>Created by</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+            <% games = @group.games %>
+            <% users = User.where(:id=>games.pluck(:creator_id)) %>
+            <% games.each do |game| %>
               <tr>
                 <td><%= link_to game.name, game %></td>
+                <td><%= link_to game.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+                <td><%= users.select { |x| x.id == game.creator_id }.first&.name %></td>
+                <td><%= ((game.status==3)?"<span class='badge badge-success'>Finished</span>":"<span class='badge badge-success'>Ongoing</span").html_safe %></td>
               </tr>
             <% end %>
           </table>
-          <%= link_to "New Game", new_game_group_path(@group), :class=>"btn btn-lg btn-primary btn-block" %>
+          <%= link_to "New Game", new_game_group_path(@group), :class => "btn btn-lg btn-primary btn-block" %>
         </div>
         <!-- Chat details -->
 

@@ -1,0 +1,113 @@
+<div id="mydeclareModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Declare</h4>
+        <button type="button" class="close" onclick="destroy_declare_modal();">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="container-xl ">
+          <div class="row">
+            <div class="col-12">
+              <h4 class="card-title">Select Deck</h4>
+            </div>
+            <% base_cards = @game.user_cards(current_user.id).map { |my_card| Game.get_base(my_card) }.uniq %>
+            <% card_hash = {} %>
+            <% base_cards.each do |x| %>
+              <% card_hash[x] = Game.deck_name(x) %>
+            <% end %>
+            <div class="col-12">
+              <%= select_tag "declare_base", options_for_select(card_hash.invert), :prompt => "Select Declaration Suite", :onchange => "base_selected();", :class => "form-control", :required => "required" %>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-12">
+              <h4 class="card-title" id="deck_name"></h4>
+            </div>
+            <div class="col-12 d-none" id="declare_table">
+              <% user_infos = User.where(:id => GameUser.where(:game_id => @game.id, :team => @my_game.team).pluck(:user_id)).map { |x| [x.id, x.first_name] }.to_h %>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Card</th>
+                  <th>Player</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% (0..5).each do |x| %>
+                  <tr>
+                    <td>
+                      <div id="declare_card_img_<%= x %>"></div><%= hidden_field_tag "declare_card[#{x}]", "" %> </td>
+                    <td> <%= select_tag "declare_user[#{x}]", options_for_select(user_infos.invert), :prompt => "Select User", :class => "form-control", :required => "required" %> </td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" disabled="disabled" id="declare_btn" onclick="declare();">Submit
+          Declaration
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+    var set_claim = "";
+
+    function declare() {
+        var post_data = {}
+        for (let x = 0; x < 6; x++) {
+            var card = $("#declare_card_" + x).val();
+            var user = $("#declare_user_" + x).val();
+            if (user == "") {
+                alert("One or more cards are not mapped!");
+                return
+            }
+            post_data[card] = user;
+        }
+        if (set_claim != "") {
+            $.post("<%= declare_game_path(@game,:format=>:json) %>", {"set_claim": set_claim, "claim_map": post_data});
+        }
+    }
+
+    function base_selected() {
+        $("#deck_name").html("");
+        $("#declare_table").addClass("d-none");
+        $("#declare_btn").attr("disabled", "disabled");
+        set_claim = $("#declare_base").find('option:selected').val();
+        if (set_claim != "") {
+            $("#deck_name").html($("#declare_base").find('option:selected').text());
+            $("#declare_btn").removeAttr("disabled");
+            generate_card_table($("#declare_base").find('option:selected').val());
+            $("#declare_table").removeClass("d-none");
+        }
+    }
+
+    function generate_card_table(base_card) {
+        var card_start = ((base_card.slice(1, 2) == "L") ? 2 : 9);
+        for (let x = 0; x < 6; x++) {
+            var card = base_card.slice(0, 1) + (x + card_start);
+            var card_sx = -card_xoff[card.slice(1, 3)] * 50 - 5;
+            var card_sy = -card_yoff[card.slice(0, 1)] * 70 - 5;
+            $("#declare_card_" + x).val(card);
+            if (my_cards.includes(card)) {
+                $("#declare_user_" + x + " option[value='" + <%= current_user.id %> +"']").removeAttr("disabled");
+                $("#declare_user_" + x).val(<%= current_user.id %>);
+                $("#declare_user_" + x).attr("disabled", "disabled");
+            } else {
+                $("#declare_user_" + x).val("");
+                $("#declare_user_" + x).removeAttr("disabled");
+                $("#declare_user_" + x + " option[value='" + <%= current_user.id %> +"']").attr("disabled", "disabled");
+            }
+            $("#declare_card_img_" + x).html("<img src=\"/small_playing_cards.svg\" style=\"width:50px;height:70px;object-fit: none; object-position: " + card_sx + "px " + card_sy + "px; \"alt=\"" + card + "\"/>");
+        }
+    }
+</script>
