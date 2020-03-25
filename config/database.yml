@@ -51,7 +51,8 @@ production_local:
   <<: *default
   database: literature_development
 production:
-  <<: *default
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  encoding: utf8
   database: literature_development
   adapter: postgresql
   username: literature
