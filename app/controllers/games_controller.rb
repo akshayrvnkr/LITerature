@@ -259,7 +259,7 @@ class GamesController < ApplicationController
     game_users = GameUser.where(:game_id => @game.id).select(:user_id, :last_online)
     check_time = @game.created_at
     check_time = last_movement.created_at if last_movement
-    @online_status = game_users.map { |x| [x.user_id, ((x.last_online and (x.last_online > check_time) and (Time.now - @my_game.last_online) < 1.minute) or false)] }.to_h
+    @online_status = game_users.map { |x| [x.user_id, ((x.last_online and (x.last_online > check_time) and (Time.now - x.last_online) < 1.minute) or false)] }.to_h
   end
 
   def delete_cards(base)
