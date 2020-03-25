@@ -9,7 +9,6 @@
 
 /.idea
 
-/config/database.yml
 /config/environments/development.rb
 
 # Ignore all logfiles and tempfiles.
