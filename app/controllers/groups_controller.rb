@@ -30,7 +30,7 @@ class GroupsController < ApplicationController
     #can_create = [6, 8].include?(params[:group][:members]&.keys&.size)
     #flash[:alert] = "Number of members should be 6 or 8" if !can_create
     respond_to do |format|
-      if @group.save and can_create
+      if @group.save # and can_create
         @group.users = User.where(:id => params[:group][:members].keys)
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render :show, status: :created, location: @group }
