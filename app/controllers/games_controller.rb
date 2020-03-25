@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :disable_access, only: [:destroy, :index]
   before_action :set_game, only: [:show, :edit, :update, :destroy, :refresh, :status, :request_card, :declare, :next_player]
   before_action :set_group, only: [:declare]
-  before_action :set_my_game, only: [:show, :refresh, :declare]
+  before_action :set_my_game, only: [:show, :refresh, :declare, :status]
   before_action :set_online_status, only: [:show, :refresh, :status]
 
   # GET /games
@@ -14,7 +14,6 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-     set_online_status
   end
 
   # GET /games/new
@@ -51,7 +50,6 @@ class GamesController < ApplicationController
   end
 
   def status
-	  set_online_status
     respond_to do |format|
       format.json
       format.js
@@ -254,11 +252,14 @@ class GamesController < ApplicationController
   end
 
   def set_online_status
+    if @my_game.last_online.nil? or (@my_game.last_online and (Time.now - @my_game.last_online) >= 1.minute)
+      @my_game.update(:last_online => Time.now)
+    end
     last_movement = GameUserMovement.where(:game_id => @game.id).last
     game_users = GameUser.where(:game_id => @game.id).select(:user_id, :last_online)
     check_time = @game.created_at
     check_time = last_movement.created_at if last_movement
-    @online_status = game_users.map{|x| [x.user_id, ((x.last_online and (x.last_online > check_time)) or false)]}.to_h
+    @online_status = game_users.map { |x| [x.user_id, ((x.last_online and (x.last_online > check_time) and (Time.now - @my_game.last_online) < 1.minute) or false)] }.to_h
   end
 
   def delete_cards(base)
