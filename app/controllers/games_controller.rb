@@ -252,7 +252,7 @@ class GamesController < ApplicationController
   end
 
   def set_online_status
-    if @my_game.last_online.nil? or (@my_game.last_online and (Time.now - @my_game.last_online) >= 1.minute)
+    if @my_game.last_online.nil? or (@my_game.last_online and (Time.now - @my_game.last_online) >= 56.seconds)
       @my_game.update(:last_online => Time.now)
     end
     last_movement = GameUserMovement.where(:game_id => @game.id).last
