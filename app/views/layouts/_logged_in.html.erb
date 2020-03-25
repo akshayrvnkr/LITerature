@@ -16,21 +16,23 @@
       </a>
     </li>
 
+    <% if current_user.id == 2 %>
     <!-- Create group -->
     <li class="nav-item">
-      <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-create-chat" title="Create chat" role="tab">
+      <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-create-chat" title="Create group" role="tab">
         <i class="icon-lg fe-edit"></i>
       </a>
     </li>
 
     <!-- Friend -->
     <li class="nav-item mt-xl-9">
-      <a class="nav-link position-relative p-0 py-xl-3 active" data-toggle="tab" href="#tab-content-friends" title="Users" role="tab">
+      <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-friends" title="Users" role="tab">
         <i class="icon-lg fe-users"></i>
       </a>
     </li>
+    <% end %>
     <!-- Profile -->
-    <li class="nav-item mt-xl-9 d-xl-block flex-xl-grow-1">
+    <li class="nav-item mt-xl-9 d-xl-block active flex-xl-grow-1">
       <a class="nav-link position-relative p-0 py-xl-3" data-toggle="tab" href="#tab-content-user" title="User" role="tab">
         <i class="icon-lg fe-user"></i>
       </a>
@@ -44,9 +46,11 @@
 <!-- Navigation -->
 <!-- Sidebar -->
 <div class="sidebar">
-  <div class="tab-content h-100" role="tablist">
+	<div class="tab-content h-100" role="tablist">
+		<% if current_user.id == 2 %>
     <%= render :partial => "layouts/groups" %>
     <%= render :partial => "layouts/users" %>
+    <% end %>
     <%= render :partial => "layouts/profile" %>
 
   </div>
