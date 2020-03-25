@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  before_action :disable_access, only: [:destroy, :index, :create]
   before_action :set_group, only: [:show, :edit, :update, :destroy, :new_game]
 
   # GET /groups
@@ -42,7 +43,16 @@ class GroupsController < ApplicationController
 
   def new_game
     users = @group.users
-    user_ids = users.ids
+    group_users = users.ids
+    user_ids = params[:user_ids].map { |x| x.to_i }
+    if (user_ids - group_users).present?
+      @error = "All players are not from the same group"
+      return
+    end
+    if user_ids.count != 6 and user_ids.count != 8
+      @error = "Number of players must be 6 or 8"
+      return
+    end
     @game = Game.create(:name => SecureRandom.uuid,
                         :group_id => @group.id,
                         :current_player => user_ids.sample,
@@ -59,7 +69,7 @@ class GroupsController < ApplicationController
         game_user.team = teams.pop
       end
     end
-    redirect_to game_path(@game)
+    @redirect = game_path(@game)
   end
 
   # PATCH/PUT /groups/1

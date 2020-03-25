@@ -32,17 +32,34 @@
             </tr>
             </thead>
             <% games = @group.games %>
-            <% users = User.where(:id=>games.pluck(:creator_id)) %>
+            <% game_users = User.where(:id => games.pluck(:creator_id)) %>
             <% games.each do |game| %>
               <tr>
                 <td><%= link_to game.name, game %></td>
                 <td><%= link_to game.created_at.strftime("%d-%m-%Y %H:%M") %></td>
-                <td><%= users.select { |x| x.id == game.creator_id }.first&.name %></td>
-                <td><%= ((game.status==3)?"<span class='badge badge-success'>Finished</span>":"<span class='badge badge-success'>Ongoing</span").html_safe %></td>
+                <td><%= game_users.select { |x| x.id == game.creator_id }.first&.name %></td>
+                <td><%= ((game.status == 3) ? "<span class='badge badge-success'>Finished</span>" : "<span class='badge badge-success'>Ongoing</span").html_safe %></td>
               </tr>
             <% end %>
-          </table>
-          <%= link_to "New Game", new_game_group_path(@group), :class => "btn btn-lg btn-primary btn-block" %>
+	  </table>
+	  <br/>
+	  <hr/>
+	  <h3>New Game</h3>
+          <% alpha_users = @users.sort_by { |x| x.first_name.upcase } %>
+          <% if alpha_users.size > 0 %>
+            <div class="row">
+              <% alpha_users.each do |user| %>
+                <div class="col-3">
+                  <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" id="id-user-game-<%= user.id %>" name="<%= "game[members][#{user.id}]" %>" type="checkbox" value="<%= user.id %>">
+                    <label class="custom-control-label" for="id-user-game-<%= user.id %>"><%= user.name %></label>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+    <% end %>
+    <br/>
+          <%= link_to "New Game", "#", :class => "btn btn-primary btn-block", :onclick => "new_game();" %>
         </div>
         <!-- Chat details -->
 
@@ -85,6 +102,27 @@
     </div>
   </div>
 </div>
+
+<script>
+    function new_game() {
+        var user_ids = [];
+        $("input[type=checkbox][name^='game[members]']:checked").each(function (ele) {
+            user_ids.push($(this).val())
+        });
+        if (user_ids.length == 6 || user_ids.length == 8) {
+            $.post('<%= new_game_group_path(@group,:format=>:json) %>', {user_ids: user_ids}, function (data) {
+                if (data["errors"]) {
+                    alert(data["errors"]);
+                }
+                if (data["redirect"]) {
+                    window.location = data["redirect"];
+                }
+            })
+        } else {
+            alert("6 or 8 players needed")
+        }
+    }
+</script>
 
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>

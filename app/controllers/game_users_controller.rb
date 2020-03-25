@@ -1,4 +1,5 @@
 class GameUsersController < ApplicationController
+  before_action :disable_access
   before_action :set_game_user, only: [:show, :edit, :update, :destroy]
 
   # GET /game_users

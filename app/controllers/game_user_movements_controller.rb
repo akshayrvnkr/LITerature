@@ -1,4 +1,5 @@
 class GameUserMovementsController < ApplicationController
+  before_action :disable_access
   before_action :set_game_user_movement, only: [:show, :edit, :update, :destroy]
 
   # GET /game_user_movements

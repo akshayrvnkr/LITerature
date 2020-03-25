@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  before_action :disable_access, only: [:destroy, :index]
   before_action :set_game, only: [:show, :edit, :update, :destroy, :refresh, :status, :request_card, :declare, :next_player]
   before_action :set_group, only: [:declare]
   before_action :set_my_game, only: [:show, :refresh, :declare]

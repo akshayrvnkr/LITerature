@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
   resources :groups do
     member do
-      get :new_game
+      post :new_game
     end
   end
   get 'pages/dashboard'

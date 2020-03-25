@@ -51,6 +51,10 @@ class ApplicationController < ActionController::Base
     # render plain: "Development ongoing, external access is not permitted" if  !(IPAddr.new("115.99.237.242/32") === current_ip_address || IPAddr.new("127.0.0.1/24") === current_ip_address)
   end
 
+  def disable_access
+    render plain: "No permissions to view this" if current_user.id != 2
+  end
+
   def current_ip_address
     request.env['HTTP_X_REAL_IP'] || request.env['REMOTE_ADDR'] || req.ip
   end
