@@ -109,7 +109,7 @@
         $("input[type=checkbox][name^='game[members]']:checked").each(function (ele) {
             user_ids.push($(this).val())
         });
-        if (user_ids.length == 6 || user_ids.length == 8) {
+        if (user_ids.length == 4 || user_ids.length == 6 || user_ids.length == 8 || user_ids.length == 12) {
             $.post('<%= new_game_group_path(@group,:format=>:json) %>', {user_ids: user_ids}, function (data) {
                 if (data["errors"]) {
                     alert(data["errors"]);
@@ -119,7 +119,7 @@
                 }
             })
         } else {
-            alert("6 or 8 players needed")
+            alert("4, 6 , 8 or 12 players needed")
         }
     }
 </script>
