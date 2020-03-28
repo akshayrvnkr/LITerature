@@ -154,7 +154,7 @@
                     }
                 })
             }
-            for (let x = 0; x < 6; x++) {
+            for (let x = 0; x < <%= (@game.game_users&.count or 0)%>; x++) {
                 var datao = data["online_status"][x];
                 var user_id = datao["user_id"];
                 var add_class = (datao["online"]) ? "online" : "offline";
