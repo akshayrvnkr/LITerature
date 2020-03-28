@@ -45,7 +45,7 @@
 	  <br/>
 	  <hr/>
 	  <h3>New Game</h3>
-          <% alpha_users = @users.sort_by { |x| x.first_name.upcase } %>
+          <% alpha_users = users.sort_by { |x| x.first_name.upcase } %>
           <% if alpha_users.size > 0 %>
             <div class="row">
               <% alpha_users.each do |user| %>
