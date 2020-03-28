@@ -49,8 +49,8 @@ class GroupsController < ApplicationController
       @error = "All players are not from the same group"
       return
     end
-    if user_ids.count != 6 and user_ids.count != 8
-      @error = "Number of players must be 6 or 8"
+    if ![4,6,8,12].include?(user_ids.count)
+      @error = "Number of players must be 4, 6, 8 or 12"
       return
     end
     @game = Game.create(:name => SecureRandom.uuid,
