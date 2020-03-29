@@ -33,7 +33,7 @@
             </thead>
             <% games = @group.games %>
             <% game_users = User.where(:id => games.pluck(:creator_id)) %>
-            <% games.each do |game| %>
+            <% games.order("created_at desc").each do |game| %>
               <tr>
                 <td><%= link_to game.name, game %></td>
                 <td><%= link_to game.created_at.strftime("%d-%m-%Y %H:%M") %></td>
