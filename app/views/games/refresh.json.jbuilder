@@ -4,7 +4,7 @@ json.score_html render :partial => "score.html.erb"
 json.modal_html render :partial => "modal.html.erb"
 json.declare_html render :partial => "declare.html.erb"
 json.my_turn @game.current_player == current_user.id
-json.my_cards @my_game.cards[:current]
+json.my_cards (@my_game and @my_game.cards[:current])
 json.next_team @game.next_team
 last_movement = @game.game_user_movements.last
 if last_movement
@@ -21,8 +21,8 @@ if last_movement
     json.last_move "#{requester} declared the #{card} #{message}"
   else
     requestee = User.find(last_movement.requestee_id).first_name
-    card = Game.card_name(last_movement.card_no)
-    json.last_move "#{requester} requested #{requestee} for #{card} #{(last_movement.fail) ? "<span style='color:red'>but failed</span>" : "<span style='color:darkgreen'>and succeeded!</span>"}"
+    card = generate_card(last_movement.card_no)
+    json.last_move "#{requester} requested #{requestee} for #{card} #{(last_movement.fail) ? "<span style='color:red;'>but failed!</span><span style='color:red;vertical-align: middle;font-size:40px;' class='fe fe-x'></span>" : "<span style='color:darkgreen;'>and succeeded!</span><span style='color:darkgreen;vertical-align: middle;font-size:40px;' class='fe fe-check'></span>"}"
   end
 else
   json.last_move "Last move unknown"

@@ -1,3 +1,4 @@
+<% if @my_game %>
 <div id="mydeclareModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -5,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Declare</h4>
-        <button type="button" class="close" onclick="destroy_declare_modal();">&times;</button>
+        <button type="button" class="close" onclick="close_declare_modal();">&times;</button>
       </div>
       <div class="modal-body">
         <div class="container-xl ">
@@ -111,3 +112,4 @@
         }
     }
 </script>
+<% end %>

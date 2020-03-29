@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
   before_action :disable_access, only: [:destroy, :index, :create]
   before_action :set_group, only: [:show, :edit, :update, :destroy, :new_game]
+  before_action :check_group_permissions, only: [:show, :edit, :new_game]
 
   # GET /groups
   # GET /groups.json
@@ -97,6 +98,12 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  def check_group_permissions
+    if !(GroupUser.where(:group_id => @group.id, :user_id => current_user.id).first or current_user.admin?)
+      redirect_to root_path, :flash => {:alert => "You are not a part of this group"}
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_group

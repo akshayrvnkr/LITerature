@@ -1,5 +1,5 @@
 <% game_users = @game.game_users %>
-<% my_team = game_users.select { |x| x.user_id == current_user.id }.first.team %>
+<% my_team = game_users.select { |x| x.user_id == current_user.id }.first&.team %>
 <% my_turn = (@game.current_player == current_user.id) %>
 <% col_count = (game_users.count == 8) ? 3 : 4 %>
 <% {"A" => "red", "B" => "blue"}.each do |team, color| %>

@@ -95,7 +95,12 @@ class Game < ApplicationRecord
   end
 
   def user_cards(user_id)
-    self.game_users.where(:user_id => user_id).first.cards[:current].sort_by { |x| "#{x[0]}#{x[1..-1].rjust(2)}" }
+    cards = self.game_users.where(:user_id => user_id).first
+    if cards
+      cards.cards[:current].sort_by { |x| "#{x[0]}#{x[1..-1].rjust(2)}" }
+    else
+      []
+    end
   end
 
 end

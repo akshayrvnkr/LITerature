@@ -4,6 +4,7 @@ class GamesController < ApplicationController
   before_action :set_group, only: [:declare]
   before_action :set_my_game, only: [:show, :refresh, :declare, :status]
   before_action :set_online_status, only: [:show, :refresh, :status]
+  before_action :check_group_permissions, only: [:show]
 
   # GET /games
   # GET /games.json
@@ -42,7 +43,7 @@ class GamesController < ApplicationController
   end
 
   def refresh
-    @my_game.update(:last_online => Time.now)
+    @my_game.update(:last_online => Time.now) if @my_game
     respond_to do |format|
       format.json
       format.js
@@ -238,6 +239,12 @@ class GamesController < ApplicationController
 
   private
 
+  def check_group_permissions
+    if !(GroupUser.where(:group_id => @game.group_id, :user_id => current_user.id).first or current_user.admin?)
+      redirect_to root_path, :flash => {:alert => "You are not a part of this group"}
+    end
+  end
+
   def get_base(card)
     Game.get_base(card)
   end
@@ -252,8 +259,11 @@ class GamesController < ApplicationController
   end
 
   def set_online_status
-    if @my_game.last_online.nil? or (@my_game.last_online and (Time.now - @my_game.last_online) >= 56.seconds)
-      @my_game.update(:last_online => Time.now)
+    begin
+      if @my_game.last_online.nil? or (@my_game.last_online and (Time.now - @my_game.last_online) >= 56.seconds)
+        @my_game.update(:last_online => Time.now)
+      end
+    rescue
     end
     last_movement = GameUserMovement.where(:game_id => @game.id).last
     game_users = GameUser.where(:game_id => @game.id).select(:user_id, :last_online)

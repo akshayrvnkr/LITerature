@@ -14,4 +14,8 @@ class User < ApplicationRecord
     "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(self.email)}"
   end
 
+  def admin?
+    self.role_id >= 30
+  end
+
 end

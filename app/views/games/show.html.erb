@@ -43,31 +43,33 @@
         <div id="players_body">
           <%= render :partial => "players" %>
         </div>
-        <% if @game.status != 3 %>
+        <% if @game.status != 3 and @my_game %>
           <%= link_to "Declare", "#", :class => "btn btn-sm btn-danger btn-block #{"btn-light" if current_user.id != @game.current_player}", :onclick => "open_declare_modal();", :id => "declare_btn_init" %>
         <% end %>
       </div>
 
     </div>
   </div>
-  <div id="my_cards">
-    <div class="card-body">
+  <% if @my_game %>
+    <div id="my_cards">
+      <div class="card-body">
 
-      <div class="media">
+        <div class="media">
 
-        <div class="media-body align-self-center">
-          <h4 class="mb-0">My Cards</h4>
+          <div class="media-body align-self-center">
+            <h4 class="mb-0">My Cards</h4>
+          </div>
         </div>
+        <% if @game.status != 3 %>
+          <div id="my_cards_body">
+            <%= render :partial => "my_cards" %>
+          </div>
+        <% else %>
+          <div class='alert alert-success'>GAME OVER</div>
+        <% end %>
       </div>
-      <% if @game.status != 3 %>
-        <div id="my_cards_body">
-          <%= render :partial => "my_cards" %>
-        </div>
-      <% else %>
-        <div class='alert alert-success'>GAME OVER</div>
-      <% end %>
     </div>
-  </div>
+  <% end %>
 </div>
 <div id="modal_body">
   <%= render :partial => "modal" %>
@@ -109,10 +111,20 @@
 
     var card_yoff = {"D": 0, "H": 1, "S": 2, "C": 3};
 
-    var my_cards = [<%= @my_game.cards[:current].map{|x| "\"#{x}\""}.join(",").html_safe %>];
+    var my_cards = [<%= @my_game.cards[:current].map{|x| "\"#{x}\""}.join(",").html_safe if @my_game %>];
 
     doPoll();
     var current_move = 0;
+
+    function close_modal() {
+        $('#myModal').modal('hide');
+        $('.modal-backdrop').remove();
+    }
+
+    function close_declare_modal() {
+        $('#mydeclareModal').modal('hide');
+        $('.modal-backdrop').remove();
+    }
 
     function destroy_modal() {
         $('#myModal').modal('hide');
